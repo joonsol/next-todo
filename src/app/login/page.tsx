@@ -12,6 +12,16 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  async function handleKakaoLogin() {
+    await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        scopes: 'profile_nickname profile_image',
+      },
+    })
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -69,9 +79,23 @@ export default function LoginPage() {
             {loading ? '처리 중...' : isSignUp ? '가입하기' : '로그인'}
           </button>
         </form>
+        <div className="mt-4 flex items-center gap-3">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-400">또는</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+        <button
+          onClick={handleKakaoLogin}
+          className="mt-4 w-full py-2 bg-[#FEE500] text-[#3C1E1E] rounded-lg font-medium hover:bg-[#f0d800] transition-colors flex items-center justify-center gap-2"
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" clipRule="evenodd" d="M9 1.5C4.858 1.5 1.5 4.134 1.5 7.376c0 2.085 1.388 3.916 3.476 4.963l-.883 3.298a.188.188 0 0 0 .289.202L8.36 13.52A8.87 8.87 0 0 0 9 13.25c4.142 0 7.5-2.634 7.5-5.874C16.5 4.134 13.142 1.5 9 1.5z" fill="#3C1E1E"/>
+          </svg>
+          카카오로 로그인
+        </button>
         <button
           onClick={() => { setIsSignUp(!isSignUp); setError('') }}
-          className="mt-4 text-sm text-gray-500 hover:text-gray-700 w-full text-center"
+          className="mt-3 text-sm text-gray-500 hover:text-gray-700 w-full text-center"
         >
           {isSignUp ? '이미 계정이 있나요? 로그인' : '계정이 없나요? 회원가입'}
         </button>
